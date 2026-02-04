@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/app_bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,34 +12,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: const Text('Zalogowano'),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        child: SizedBox(
-          height: 56,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
-                child: const Text('Wyszukaj'),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
-                child: const Text('Home'),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
-                child: const Text('Profil'),
-              ),
-            ],
-          ),
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text('Przycisk'),
         ),
       ),
+      bottomNavigationBar: const AppBottomBar(current: AppSection.home),
     );
   }
 }
