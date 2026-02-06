@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'package:flutter_application_1/auth_api.dart';
 import 'package:flutter_application_1/api_config.dart';
-
+import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
-  
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -18,25 +17,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final AuthApi _authApi = AuthApi(kApiBaseUrl);
 
-
-
   Future<void> _login() async {
-  try {
-    await _authApi.login(
-      _loginController.text,
-      _passwordController.text,
-    );
+    try {
+      await _authApi.login(
+        _loginController.text,
+        _passwordController.text,
+      );
 
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Błąd logowania: $e')),
-    );
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Błąd logowania: $e')),
+      );
+    }
   }
-}
-
 
   @override
   void dispose() {
@@ -75,6 +71,20 @@ class _LoginScreenState extends State<LoginScreen> {
               child: ElevatedButton(
                 onPressed: _login,
                 child: const Text('Zaloguj'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RegistrationScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Rejestracja'),
               ),
             ),
           ],

@@ -12,9 +12,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {},
-          child: const Text('Przycisk'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.network(
+              'https://bdam98b5.blob.core.windows.net/photos/UEW_logo.webp',
+              height: 200,
+              width: 200,
+              ),
+            Text('Projekt zaliczeniowy BDAMI IwB', style: TextStyle(fontSize: 19)),
+            Text('Wojciech Kucharski 192467'),
+            Text('Mikołaj Olczak 192433')
+          ],
         ),
       ),
       bottomNavigationBar: const AppBottomBar(current: AppSection.home),
