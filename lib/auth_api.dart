@@ -29,5 +29,20 @@ class AuthApi {
     });
   }
 
+  Future<void> changeUsername({
+    required String username,
+    required String password,
+    required String newUsername,
+  }) async {
+    final token = await login(username, password);
+    await _dio.put(
+      '/me/username',
+      data: {
+        'new_username': newUsername,
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
   Future<String?> getToken() => _storage.read(key: 'jwt');
 }

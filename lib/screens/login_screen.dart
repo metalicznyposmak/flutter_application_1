@@ -14,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _changeLoginController = TextEditingController();
+  final TextEditingController _changePasswordController = TextEditingController();
+  final TextEditingController _changeNewLoginController = TextEditingController();
 
   final AuthApi _authApi = AuthApi(kApiBaseUrl);
 
@@ -34,10 +37,93 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _showChangeUsernameDialog() async {
+    final parentContext = context;
+    _changeLoginController.clear();
+    _changePasswordController.clear();
+    _changeNewLoginController.clear();
+
+    await showDialog<void>(
+      context: parentContext,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Zmien nazwe uzytkownika'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _changeLoginController,
+                  decoration: const InputDecoration(
+                    labelText: 'Login',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _changePasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Haslo',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _changeNewLoginController,
+                  decoration: const InputDecoration(
+                    labelText: 'Nowy login',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Anuluj'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await _authApi.changeUsername(
+                    username: _changeLoginController.text,
+                    password: _changePasswordController.text,
+                    newUsername: _changeNewLoginController.text,
+                  );
+                  if (!mounted) return;
+                  FocusScope.of(dialogContext).unfocus();
+                  Navigator.of(dialogContext).pop();
+                  _loginController.text = _changeNewLoginController.text;
+                  if (!parentContext.mounted) return;
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
+                    const SnackBar(content: Text('Zmieniono nazwe uzytkownika')),
+                  );
+                } catch (e) {
+                  if (!mounted) return;
+                  if (!parentContext.mounted) return;
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
+                    SnackBar(content: Text('Blad zmiany: $e')),
+                  );
+                }
+              },
+              child: const Text('Zapisz'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _loginController.dispose();
     _passwordController.dispose();
+    _changeLoginController.dispose();
+    _changePasswordController.dispose();
+    _changeNewLoginController.dispose();
     super.dispose();
   }
 
@@ -85,6 +171,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
                 child: const Text('Rejestracja'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _showChangeUsernameDialog,
+                child: const Text('Zmien nazwe uzytkownika'),
               ),
             ),
           ],
